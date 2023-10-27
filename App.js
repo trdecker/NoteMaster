@@ -1,20 +1,31 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react'
+import { StyleSheet, View, Text, SafeAreaView } from 'react-native'
+import HomeScreen from './components/HomeScreen'
+import NoteEditScreen from './components/NoteEditScreen'
 
 export default function App() {
+  let screen = "NOTE"
+
+  let currNote = null
+
+  const goHome = () => {
+    currNote = null
+    screen = "HOME"
+    console.log(screen)
+  }
+
+  const selectNote = (item) => {
+    console.log("foo")
+    currNote = item
+    screen = "NOTE"
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <SafeAreaView>
+      { screen == "HOME" ? <HomeScreen chooseItem={selectNote}/> : null }
+      { screen == "NOTE" ? <NoteEditScreen item={currNote} goHome={goHome} /> : null}
+    </SafeAreaView>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const styles = StyleSheet.create({})
