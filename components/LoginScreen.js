@@ -50,7 +50,7 @@ const LoginScreen = ({ changeScreen }) => {
     console.log('log in')
     console.log(username, password)
     // const response = await login(username, password)
-    const response = await login("taddecker", "mypassword")
+    const response = await login(username, password)
     console.log('res', response)
     if (response) {
       await AsyncStorage.setItem('username', response.username)
