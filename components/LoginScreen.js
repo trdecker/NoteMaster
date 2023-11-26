@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native'
+import { View, Text, TouchableWithoutFeedback, StyleSheet, TextInput, TouchableOpacity, Image, Alert, Keyboard } from 'react-native'
 import { signup, login } from '../api/usersApi'
 import { Asset } from 'expo-asset'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -25,6 +25,16 @@ const LoginScreen = ({ changeScreen }) => {
     loadImage()
   })
 
+  /**
+   * @description When user taps off keyboard, vanish the keyboard.
+   */
+  function handleScreenTap() {
+    Keyboard.dismiss()
+  }
+
+  /**
+   * @description Sign up the user. On success, change to HOME screen.
+   */
   async function handleSignup() {
     console.log('sign up')
     const response = await signup(username, password)
@@ -51,7 +61,7 @@ const LoginScreen = ({ changeScreen }) => {
     console.log(username, password)
     // const response = await login(username, password)
     const response = await login(username, password)
-    console.log('res', response)
+    console.log('res:', response)
     if (response) {
       await AsyncStorage.setItem('username', response.username)
       await AsyncStorage.setItem('userId', response.userId)
@@ -72,38 +82,41 @@ const LoginScreen = ({ changeScreen }) => {
   }
 
   return (
-    <View style={styles.body}>
-      {logo && <Image style={styles.logo} source={{ uri: logo.localUri }} />}
-      {/* Username entry */}
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Enter Username"
-          autoCapitalize="none"
-          placeholderTextColor="#003f5c"
-          onChangeText={(username) => setUsername(username)}
-        />
+    <TouchableWithoutFeedback onPress={handleScreenTap}>
+      <View style={styles.body}>
+        {logo && <Image style={styles.logo} source={{ uri: logo.localUri }} />}
+        {/* Username entry */}
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.TextInput}
+              placeholder="Enter Username"
+              autoCapitalize="none"
+              placeholderTextColor="#003f5c"
+              onChangeText={(username) => setUsername(username)}
+            />
+          </View>
+
+        {/* Password entry */}
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Enter Password"
+            autoCapitalize="none"
+            placeholderTextColor="#003f5c"
+            secureTextEntry={true}
+            onChangeText={(password) => setPassword(password)}
+          />
+        </View>
+        {/* Login button */}
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginText}>LOGIN</Text>
+        </TouchableOpacity>
+        {/* Sign in button */}
+        <TouchableOpacity style={styles.loginButton} onPress={handleSignup}>
+          <Text style={styles.loginText}>SIGN UP</Text>
+        </TouchableOpacity>
       </View>
-      {/* Password entry */}
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Enter Password"
-          autoCapitalize="none"
-          placeholderTextColor="#003f5c"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-      </View>
-      {/* Login button */}
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginText}>LOGIN</Text>
-      </TouchableOpacity>
-      {/* Sign in button */}
-      <TouchableOpacity style={styles.loginButton} onPress={handleSignup}>
-        <Text style={styles.loginText}>SIGN UP</Text>
-      </TouchableOpacity>
-    </View>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -144,9 +157,9 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   logo: {
-    width: 200, // Specify the width
-    height: 200, // Specify the height
-    resizeMode: 'contain', // Adjust the resizeMode as needed
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
   }
 
 })

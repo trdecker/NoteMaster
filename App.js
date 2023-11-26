@@ -103,7 +103,7 @@ export default function App() {
             : null
           }
         </View>
-        <Button title="Test" onPress={test} />
+        {/*<Button title="Test" onPress={test} />*/}
       </SafeAreaView>
     // </AuthProvider>
   )
