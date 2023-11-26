@@ -1,10 +1,63 @@
-import { useState, useRef } from 'react'
-import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
+/**
+ * @file NoteEditScreen.js
+ * @description the location where a user can edit and delete a note.
+ * 
+ * @author Tad Decker
+ * 11/25/2023
+ */
 
-const NoteEditScreen = ({currItem, goBack, deleteItem}) => { 
+import { useState, useRef } from 'react'
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Alert } from 'react-native'
+import { deleteNote, updateNote } from '../api/notesApi'
+import { MaterialIcons } from '@expo/vector-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+const NoteEditScreen = ({currItem, goBack}) => { 
   const [item, setItem] = useState(currItem)
   const descriptionRef = useRef(null)
+
+  /**
+   * @description Save the changes to the current note (this happens when the back button is pressed)
+   */
+  async function saveChanges() {
+    const userId = await AsyncStorage.getItem('userId')
+    console.log(userId)
+    console.log(item)
+    const newItem = { userId, ...item}
+
+    const response = await updateNote(userId, newItem)
+    if (response) {
+      goBack()
+    }
+    else {
+      Alert.alert(
+      'Error saving note',
+      'The note was not saved! Please try again',
+      [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+      { cancelable: true }
+    )
+    }
+  }
+
+/**
+ * @param {Object} item
+ * @description Delete the note, then return to the home screen.
+ */
+  async function handleDeleteItem(item) {
+    const userId = await AsyncStorage.getItem('userId')
+    const response = await deleteNote(userId, item)
+    if (response) {
+      goBack()
+    }
+    else {
+      Alert.alert(
+      'Error deleting note',
+      'Please try again',
+      [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+      { cancelable: true }
+    )
+    }
+  }
 
   const focusDescription = () => {
     if (descriptionRef.current)
@@ -20,7 +73,7 @@ const NoteEditScreen = ({currItem, goBack, deleteItem}) => {
           justifyContent: 'space-between'
         }}>
         {/* Header */}
-          <TouchableOpacity onPress={() => goBack(item)} style={styles.header}>
+          <TouchableOpacity onPress={() => saveChanges()} style={styles.header}>
             <MaterialIcons name='chevron-left' size={20} /> 
             <Text style={{ fontWeight: 'bold' }}>Notes</Text>
           </TouchableOpacity>
@@ -58,7 +111,7 @@ const NoteEditScreen = ({currItem, goBack, deleteItem}) => {
       {/* Action button */}
       <View style={styles.actions}> 
         {/* Delete Button */}
-        <TouchableOpacity onPress={() => deleteItem(item)}>
+        <TouchableOpacity onPress={() => handleDeleteItem(item)}>
           <MaterialIcons
             name="delete"
             size={40} color="gray"

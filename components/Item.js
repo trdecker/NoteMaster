@@ -3,7 +3,16 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 export default Item = ({click, title, body}) => (
   <TouchableOpacity onPress={click}>
     <Text style={styles.title}>{title}</Text>
-    <Text style={styles.description}>     {body.slice(0,15)}{ body.length > 15 ? "..." : null }</Text>
+    <Text style={styles.description}>     {
+      body ? 
+      body.slice(0,15) :
+      null
+      }{ 
+        body?.length ?
+        body.length > 15 ? "..." : 
+        null :
+        null
+      }</Text>
       <View style={styles.line} />
   </TouchableOpacity>
 )

@@ -1,25 +1,49 @@
-import { useState } from 'react'
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { useState, useEffect } from 'react'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
+import { createNote } from '../api/notesApi.js'
 import Item from '../components/Item'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 function generateId() {
   const now = Date.now()
   const rand = Math.floor(Math.random() * 10000)
-  return `${now}-${rand}`
+  return `${now}${rand}`
 }
 
 const HomeScreen = ({ currData, chooseItem }) => {
   const [data, setData] = useState(currData)
 
-  function newItem() {
+  /**
+   * Create a new item, then pass that item to the parent, app.js.
+   * If the note fails to be created, display an error message instead.
+   */
+  async function newItem() {
+    const userId = await AsyncStorage.getItem('userId')
     const item = {
       id: generateId(),
       title: '',
       body: ''
     }
-    chooseItem(item)
+
+    const response = await createNote(userId, item)
+    if (response) {
+      chooseItem(item)
+    }
+    else {
+      Alert.alert(
+      'Error creating note',
+      'Please try again',
+      [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+      { cancelable: true }
+    )
+    }
   }
+
+  useEffect(() => {
+    console.log('Data in HomeScreen:', currData);
+    setData(currData)
+  }, [currData]);
 
   return (
     <View style={styles.body}>
@@ -32,7 +56,7 @@ const HomeScreen = ({ currData, chooseItem }) => {
             <Item
               click={() => chooseItem(item)}
               title={item.title != '' ? item.title : 'No title'}
-              body={item.body}
+              body={item.body ?? 'No body'}
             />}
         />
       </View>

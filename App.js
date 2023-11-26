@@ -1,35 +1,62 @@
-import { useState, useEffect } from 'react'
-import { StyleSheet, SafeAreaView, View } from 'react-native'
+/**
+ * @file app.js
+ * @description Entry for application.
+ * @author Tad Decker
+ * 
+ * TODO: simplify functions involving changing screens
+ * 11/11/2023
+ */
+
+import { useState, useEffect, } from 'react'
+import { StyleSheet, SafeAreaView, View, Button} from 'react-native'
 import HomeScreen from './components/HomeScreen'
 import NoteEditScreen from './components/NoteEditScreen'
-import appData from './assets/data'
+import LoginScreen from './components/LoginScreen'
+import { getNotes } from './api/notesApi'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-// You can import supported modules from npm
-import { Card } from 'react-native-paper'
 
+/**
+ * @description The entry point for the application.
+ */
 export default function App() {
-  const [screen, setScreen] = useState("HOME")
-  const [data, setData] = useState(appData)
-  const [currNote, setCurrNote] = useState(appData[1])
+  // Initialize variables
+  const [screen, setScreen] = useState("LOGIN")
+  const [data, setData] = useState([])
+  const [currNote, setCurrNote] = useState(null)
+  const [loading, setLoading] = useState(false)
 
-  const goHome = (currNote) => {
-    let newData
-    // If an id exists in the list of information, update that item.
-    if (data.some(obj => (obj.id === currNote.id))) {
-      newData = data.map(obj => {
-        if (obj.id === currNote.id) {
-          return { ...currNote }
-        }
-        return obj
-      })
-    } 
-    // Otherwise, add it as a new item.
-    else {
-      newData = data
-      newData.push(currNote)
+  useEffect(() => {
+    if (screen === "HOME")
+      fetchData()
+  }, [screen])
+
+  async function fetchData() {
+    try {
+      const userId = await AsyncStorage.getItem('userId')
+      const result = await getNotes(userId) // FIXME: update this dynamically!
+
+      setData(result.notes)
+    } catch (error) {
+      console.error(error)
     }
+  }
 
-    setData(newData)
+
+  async function test() {
+    const token = await AsyncStorage.getItem('authToken');
+    const userId = await AsyncStorage.getItem('userId')
+    const returnedUsername = await AsyncStorage.getItem('username')
+    console.log(token, userId, returnedUsername)
+  }
+
+  /**
+   * @function goHome
+   * @param {Object} currNote
+   * @description Edit a note in the database. Re-load the notes. Transition to the homescreen.
+   */
+  const goHome = async () => {
+    fetchData()
     setScreen("HOME")
   }
 
@@ -38,33 +65,47 @@ export default function App() {
     setScreen("NOTE")
   }
 
-  const deleteItem = (item) => {
-    const newData = data.filter(currItem => currItem.id !== item.id)
-    setData(newData)
-    setScreen("HOME")
+  const changeScreen = (screen) => {
+    setScreen(screen)
   }
 
   return (
-    <SafeAreaView style={styles.main}>
-      {/* Content */}
-      <View style={{ flex: 1 }}> 
-        { screen === "HOME" ? 
-          <HomeScreen 
-            currData={data} 
-            chooseItem={selectNote} 
-          /> 
-          : null 
-        }
-        { screen === "NOTE" ? 
-          <NoteEditScreen 
-            currItem={currNote} 
-            goBack={goHome}
-            deleteItem={deleteItem} 
-          /> 
-          : null
-        }
-      </View>
-    </SafeAreaView>
+    // <AuthProvider>
+    //   {/**  */}
+      <SafeAreaView style={styles.main}>
+        {/* <Button onPress={fetchData} /> */}
+        {/* Content */}
+        <View style={{ flex: 1 }}> 
+          {/* lOGIN screen */}
+          {
+            screen === "LOGIN" ?
+            <LoginScreen 
+              changeScreen={changeScreen}
+            />
+            : null
+          }
+          {/* HOME screen */}
+          { 
+            screen === "HOME" ? 
+            <HomeScreen 
+              currData={data} 
+              chooseItem={selectNote}
+            /> 
+            : null 
+          }
+          {/* NOTE edit screen */}
+          { 
+            screen === "NOTE" ? 
+            <NoteEditScreen 
+              currItem={currNote}
+              goBack={goHome}
+            /> 
+            : null
+          }
+        </View>
+        <Button title="Test" onPress={test} />
+      </SafeAreaView>
+    // </AuthProvider>
   )
 }
 
