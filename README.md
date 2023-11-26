@@ -1,10 +1,11 @@
 # Overview
 Notes application written in React Native using Expo Snack. Create, edit, and delete notes. Sign up as a new user and login to view saved notes.
+Checkout out the backend [here](https://github.com/trdecker/NoteMasterAPI).
 
 [Software Demo Video](https://youtu.be/NSFhEtAoDAg)
 
 # Development Environment
-Developed in an Expo Snack. Backend is found [here](https://github.com/trdecker/NoteMasterAPI).
+Developed in an Expo Snack.
 
 # Useful Websites
 
