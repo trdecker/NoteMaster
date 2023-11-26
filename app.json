@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "testproject",
-    "slug": "testproject",
+    "name": "notemaster",
+    "slug": "snack-72e3cddc-aba1-4815-9fb8-bd20d7db986d",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,12 +25,6 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "ca30b8e5-d09a-4a9f-ba7f-a0ff73e0b5c6"
-      }
-    },
-    "owner": "taddecker"
+    }
   }
 }
