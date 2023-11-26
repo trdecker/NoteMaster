@@ -3,6 +3,7 @@ Notes application written in React Native using Expo Snack. Create, edit, and de
 Checkout out the backend [here](https://github.com/trdecker/NoteMasterAPI).
 
 [Demo video, no backend](https://youtu.be/NSFhEtAoDAg)
+
 [Demo video, with backend](https://youtu.be/9-y2aRZL7Zo)
 
 # Development Environment
