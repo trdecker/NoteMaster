@@ -42,14 +42,6 @@ export default function App() {
     }
   }
 
-
-  async function test() {
-    const token = await AsyncStorage.getItem('authToken');
-    const userId = await AsyncStorage.getItem('userId')
-    const returnedUsername = await AsyncStorage.getItem('username')
-    console.log(token, userId, returnedUsername)
-  }
-
   /**
    * @function goHome
    * @param {Object} currNote

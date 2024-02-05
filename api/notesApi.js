@@ -22,8 +22,6 @@ export async function getNotes(userId) {
   try {
     const path = `${dev ? corsProxyUrl : ''}${url}/notes?userId=${encodeURIComponent(userId)}`
     const authToken = await AsyncStorage.getItem('authToken')
-    console.log(path)
-    console.log(authToken)
 
     const notes = await axios.get(path, {
       headers: {
@@ -38,7 +36,7 @@ export async function getNotes(userId) {
 
 /**
  * @param {String} userId
- * @param {String} item
+ * @param {Object} item
  * @returns the response if success; else null
  */
 export async function createNote(userId, item) {
@@ -90,9 +88,6 @@ export async function deleteNote(userId, item) {
   try {
     const path = `${dev ? corsProxyUrl : ''}${url}/notes?userId=${encodeURIComponent(userId)}&noteId=${item.id}`
     const authToken = await AsyncStorage.getItem('authToken')
-
-    console.log(authToken)
-    console.log(path, item)
 
     const response = await axios.delete(path, {
       headers: {

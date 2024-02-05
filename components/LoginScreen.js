@@ -36,7 +36,6 @@ const LoginScreen = ({ changeScreen }) => {
    * @description Sign up the user. On success, change to HOME screen.
    */
   async function handleSignup() {
-    console.log('sign up')
     const response = await signup(username, password)
     if (response) {
       await AsyncStorage.setItem('username', response.username)
@@ -50,18 +49,15 @@ const LoginScreen = ({ changeScreen }) => {
       Alert.alert(
       'Error signing up',
       'Username may be already taken',
-      [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+      [{ text: 'OK'}],
       { cancelable: true }
     )
     }
   }
 
   async function handleLogin() {
-    console.log('log in')
-    console.log(username, password)
     // const response = await login(username, password)
     const response = await login(username, password)
-    console.log('res:', response)
     if (response) {
       await AsyncStorage.setItem('username', response.username)
       await AsyncStorage.setItem('userId', response.userId)
@@ -75,7 +71,7 @@ const LoginScreen = ({ changeScreen }) => {
       Alert.alert(
       'Error logging in',
       'Incorrect username or password',
-      [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+      [{ text: 'OK'}],
       { cancelable: true }
     )
     }

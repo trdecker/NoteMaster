@@ -46,7 +46,6 @@ export async function login(username, password) {
     const response = await axios.post(path, body)
 
     if (response.status === 200) {
-      console.log(response)
       return response.data
     }
     else return null

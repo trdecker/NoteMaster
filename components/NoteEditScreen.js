@@ -21,8 +21,6 @@ const NoteEditScreen = ({currItem, goBack}) => {
    */
   async function saveChanges() {
     const userId = await AsyncStorage.getItem('userId')
-    console.log(userId)
-    console.log(item)
     const newItem = { userId, ...item}
 
     const response = await updateNote(userId, newItem)
@@ -33,7 +31,7 @@ const NoteEditScreen = ({currItem, goBack}) => {
       Alert.alert(
       'Error saving note',
       'The note was not saved! Please try again',
-      [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+      [{ text: 'OK'}],
       { cancelable: true }
     )
     }
@@ -53,7 +51,7 @@ const NoteEditScreen = ({currItem, goBack}) => {
       Alert.alert(
       'Error deleting note',
       'Please try again',
-      [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+      [{ text: 'OK'}],
       { cancelable: true }
     )
     }

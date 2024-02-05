@@ -34,14 +34,13 @@ const HomeScreen = ({ currData, chooseItem }) => {
       Alert.alert(
       'Error creating note',
       'Please try again',
-      [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
+      [{ text: 'OK'}],
       { cancelable: true }
     )
     }
   }
 
   useEffect(() => {
-    console.log('Data in HomeScreen:', currData);
     setData(currData)
   }, [currData]);
 
